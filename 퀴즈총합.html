@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>유미 퀴즈 게임</title>
+  <link rel="icon" href="https://opgg-com-image.akamaized.net/attach/images/20210123103832.1580117.jpg" type="image/png"/>
+  <style>
+    body {
+      font-family: 'Pretendard', sans-serif;
+      background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%);
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .quiz-container {
+      background: #fffdf7;
+      border: 3px solid #f1c40f;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.15);
+      width: 500px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 30px;
+      color: #f39c12;
+    }
+    .question {
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 2px solid #f39c12;
+      background: #fff;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .options button:hover {
+      background-color: #fceabb;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+    #nextBtn {
+      margin-top: 25px;
+      padding: 10px 20px;
+      background: #f39c12;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: none;
+    }
+    #nextBtn:hover {
+      background: #e67e22;
+    }
+    img {
+      width: 360px;
+      height: auto;
+      max-width: 100%;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    .back-btn {
+      position: absolute;
+      top: 40px;
+      left: 50px;
+      background-color: #f39c12;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: background-color 0.2s;
+      cursor: pointer;
+    }
+    .back-btn:hover {
+      background-color: #e67e22;
+    }
+  </style>
+</head>
+<body>
+  <a href="http://127.0.0.1:5500/%EA%B2%8C%EC%9E%84%EA%B3%A0%EB%A5%B4%EA%B8%B0.html" class="back-btn">← 돌아가기</a>
+  <div class="quiz-container">
+    <h1 id="quizTitle">🐱 유미 퀴즈 게임</h1>
+    <div id="imageContainer"></div>
+    <div id="question" class="question">문제 로딩 중...</div>
+    <div class="options" id="options"></div>
+    <div class="result" id="result"></div>
+    <button id="nextBtn" onclick="nextQuestion()">다음 문제</button>
+  </div>
+
+  <audio id="correctSound" src="요이.mp3"></audio>
+  <audio id="wrongSound" src="dry-fart.mp3"></audio>
+
+  <script>
+    const textQuiz = [
+      {
+        question: "Q. 유미의 패시브는?",
+        options: ["야옹이 친구", "슈우우웅", "사르르탄", "너랑 유미랑!"],
+        answer: "야옹이 친구"
+      },
+      {
+        question: "Q. 유미의 공격 대사로 틀린것은?",
+        options: ["받아라! 고양이 발톱!", "호랑이다 어흥!", "어흥! 다 때려 부숴주마!", "냐~옹!"],
+        answer: "어흥! 다 때려 부숴주마!"
+      },
+      {
+        question: "Q. 유미의 출시일은?",
+        options: ["2019년 5월 14일", "2019년 5월 12일", "2019년 5월 8일", "2019년 5월 23일"],
+        answer: "2019년 5월 14일"
+      }
+    ];
+
+    const imageQuiz = [
+      {
+        img: "https://i.namu.wiki/i/HyCY7xpHu8XdRBSz02W6MK8LHLtkYmwXpUNCSFdvI3SRhOLgukD1F1tP9HFZL7eh5PT89452XzIdRXoERcXU30lSpK7U85kb3WW9127dVb5KkWFc8LgdhZ-pf9D6NQ5qykiiXEmEy3PtSE4QeDmR_g.webp",
+        question: "Q. 이 유미 스킨의 이름은?",
+        answer: "전투사관학교 유미 교장선생님",
+        options: ["전투사관학교 유미 교장선생님", "전투사관학교 유미 사감선생님", "전투사관안경 유미 교감선생님", "전투사관학교 유미 교감선생님"]
+      },
+      {
+        img: "https://i.namu.wiki/i/0TBrN5nzp96_eJ1d7MNZbZkqZG6NMJ5XziebT-NIJtV3bweF0MBTwXe8At7lmANNCuLKeiWS5bnoGFZ08G3TCW4Qw_JsVc99YQOcANX0RkgZxYC7SVthJvhnbHlPsEw4tnmbfC4GkXZQL9U471ntTQ.webp",
+        question: "Q. 이 유미 스킨의 이름은?",
+        answer: "사이버 고양이 유미",
+        options: ["수정 사이버 코드 유미", "EDG 사이버 유미", "사이버 고양이 유미", "프레스티지 사이버 고양이 유미"]
+      },
+      {
+        img: "https://i.namu.wiki/i/TqePs5fwL8Vx7f57EbrN5lyNKJswX0hvwMW0Gw9EDfMUvKlk_NBlrkOvJU6ItJvJKTsSSZFwaS4paGm8-iq5R6jkFcaZHjarz-Htc0s4yBVydcfw_Q88PdCEBOovfvaOFyR2F5yhThnpxryrR0HLag.webp",
+        question: "Q. 이 유미 스킨의 이름은?",
+        answer: "귀염둥이 카페 유미",
+        options: ["사랑의 귀염둥이 유미", "귀염둥이 사랑의 유미", "귀염둥이 라떼 유미", "귀염둥이 카페 유미"]
+      },
+      {
+        img: "https://i.namu.wiki/i/cgygi2qXo--hloy9eN5nUCNG7nwple2QArDX8xwB2Ggk-PSwlqDQovuGWGS0nEWYWmXTDmy5BpJrE3ZHDWNyAjcKp6hQ3uj_0MgQMpnS0rAWOmATSWZZ9hpCuzMZJpPNZFs-aqldO0_E9YXU6ktWmQ.webp",
+        question: "Q. 이 유미 스킨의 이름은?",
+        answer: "수정 장미 유미",
+        options: ["프레스티지 장미 고양이 유미", "사랑의 보라 장미 유미", "수정 장미 유미", "보라 장미 유미"]
+      }
+    ];
+
+    let currentQuiz = textQuiz;
+    let currentType = "text";
+    let currentIndex = 0;
+    let score = 0;
+
+    function showQuestion() {
+      const q = currentQuiz[currentIndex];
+      const imageContainer = document.getElementById("imageContainer");
+      if (currentType === "image" && q.img) {
+        imageContainer.innerHTML = `<img src="${q.img}" alt="퀴즈 이미지">`;
+      } else {
+        imageContainer.innerHTML = "";
+      }
+      document.getElementById("question").textContent = q.question;
+      document.getElementById("result").textContent = "";
+      document.getElementById("nextBtn").style.display = "none";
+
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+      q.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.onclick = () => checkAnswer(opt);
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(selected) {
+      const correct = currentQuiz[currentIndex].answer;
+      const resultDiv = document.getElementById("result");
+
+      if (selected === correct) {
+        resultDiv.textContent = "✅ 정답!";
+        resultDiv.style.color = "green";
+        score++;
+        document.getElementById("correctSound").play();
+      } else {
+        resultDiv.textContent = `❌ 정답은 "${correct}"`;
+        resultDiv.style.color = "red";
+        document.getElementById("wrongSound").play();
+      }
+      document.querySelectorAll(".options button").forEach(btn => btn.disabled = true);
+      document.getElementById("nextBtn").style.display = "inline-block";
+      currentIndex++;
+
+      if (currentIndex >= currentQuiz.length) {
+        if (currentType === "text") {
+          currentQuiz = imageQuiz;
+          currentType = "image";
+          currentIndex = 0;
+          document.getElementById("nextBtn").textContent = "유미 스킨 퀴즈 시작!";
+          document.getElementById("nextBtn").onclick = () => {
+            showQuestion();
+            document.getElementById("nextBtn").textContent = "다음 문제";
+            document.getElementById("nextBtn").onclick = nextQuestion;
+          };
+        } else {
+          document.getElementById("nextBtn").textContent = "게임 고르기 페이지로";
+          document.getElementById("nextBtn").onclick = () => {
+            alert(`🎉 퀴즈 완료! 총 ${score}개 맞췄습니다.`);
+            window.location.href = "http://127.0.0.1:5500/%EA%B2%8C%EC%9E%84%EA%B3%A0%EB%A5%B4%EA%B8%B0.html";
+          };
+        }
+      }
+    }
+
+    function nextQuestion() {
+      showQuestion();
+    }
+
+    document.addEventListener("DOMContentLoaded", showQuestion);
+  </script>
+</body>
+</html>

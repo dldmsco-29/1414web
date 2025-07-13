@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>유미에 대해 알아보세요</title>
+  <link rel="icon" href="https://yt3.googleusercontent.com/DZKu9dCsK8FVgaUDp_5GDgqlkNAuKZ_Sgj_kH33L1GMPimr9XtlENUduRzyN7rNBLdRE0mKP4Q=s900-c-k-c0x00ffffff-no-rj" type="image/png"/>
+  <style>
+    body {
+      background: linear-gradient(135deg, #090739, #541081, #2d3af3);
+      color: rgb(255, 255, 255);
+      font-family: 'Pretendard', sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .container {
+      text-align: center;
+      animation: fadeIn 2s ease-in-out;
+    }
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, #fff6cc, #77d5ed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    p {
+      font-size: 1.2rem;
+      color: #feffc8b9;
+      animation: slideUp 1.5s ease-in-out 1s forwards;
+      opacity: 0;
+    }
+    button {
+      margin-top: 2rem;
+      padding: 0.8rem 2rem;
+      border: none;
+      border-radius: 2rem;
+      background: #afb9c4;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      background: #e3ece7;
+      color: #333;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideUp {
+      to { opacity: 1; transform: translateY(0); }
+      from { transform: translateY(20px); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>환영합니다</h1>
+    <p>유미(leage of legend) 게임</p>
+    <button id="myBtn">들어가기</button>
+  </div>
+  
+  <script>
+    const btn = document.getElementById('myBtn');
+    const soundUrl = "https://www.mewpot.com/sound-effects/11992";
+    btn.onclick = function () {
+      const audio = new Audio(soundUrl);
+      audio.play();
+      setTimeout(() => {
+        window.location.href = 'http://127.0.0.1:5500/%EA%B2%8C%EC%9E%84%EA%B3%A0%EB%A5%B4%EA%B8%B0.html';
+      }, 1000);
+    };
+  </script>
+</body>
+</html>

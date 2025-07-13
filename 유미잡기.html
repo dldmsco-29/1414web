@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>유미 잡기 게임 1단계</title>
+  <link rel="icon" href="https://opgg-com-image.akamaized.net/attach/images/20210123103832.1580117.jpg" type="image/png"/>
+  <style>
+    body {
+      background: url("https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data/131297d7ed24e7ac8d5886743b92496b07c3bad5-1280x720.jpg")
+      center / cover no-repeat fixed;
+      margin: 0;
+      font-family: 'Pretendard', sans-serif;
+      color: rgb(255, 252, 255);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      margin-top: 30px;
+      font-size: 3rem;
+      color: #ffffff;
+      text-shadow:
+      0 0 5px #ff94f7,
+      0 0 10px #ff60d3,
+      0 0 20px #ff30b1,
+      0 0 40px #e500a4;
+      animation: flicker 1.5s infinite alternate;
+    }
+    @keyframes flicker {
+      0% { opacity: 1; }
+      100% { opacity: 0.8; }
+    }
+    #timerBarContainer {
+      width: 90%;
+      height: 15px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border: 2px solid white;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 15px;
+    }
+    #timerBar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(to right, #fcff33, #ff60d3);
+      transition: width 1s linear;
+    }
+    #game {
+      border-radius: 20px;
+      position: relative;
+      width: 1100px;
+      height: 550px;
+      background-color: #e67c7cba;
+      margin-top: 20px;
+      border: 5px solid #fff;
+      overflow: hidden;
+    }
+    .mole {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      cursor: pointer;
+      user-select: none;
+    }
+    #score {
+      margin-top: 10px;
+      font-size: 1.2rem;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: #f2eb1fb2;
+      color: rgb(82, 81, 81);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      color: #fff;
+      background-color: rgba(255, 131, 22, 0.76);
+    }
+    .miss {
+      position: absolute;
+      color: red;
+      font-size: 0.9rem;
+      font-weight: bold;
+      animation: fadeUp 1s forwards;
+      pointer-events: none;
+      z-index: 10;
+    }
+    @keyframes fadeUp {
+      0% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>유미 잡기 게임 😊 1단계</h1>
+
+  <div id="timerBarContainer">
+    <div id="timerBar"></div>
+  </div>
+
+  <div id="game"></div>
+  <div id="score">점수: 0</div>
+
+  <div id="buttonContainer" style="display: flex; gap: 10px; margin-top: -10px;">
+    <button onclick="startGame()">게임 시작</button>
+    <button onclick="goBack()">게임 고르기</button>
+  </div>
+
+  <audio id="missSound" src="ping_missing.mp3" preload="auto"></audio>
+  <audio id="startSound" src="mission-complete_Lm8mayX.mp3" preload="auto"></audio>
+
+  <script>
+    const game = document.getElementById("game");
+    const scoreDisplay = document.getElementById("score");
+    const timerBar = document.getElementById("timerBar");
+    const missSound = document.getElementById("missSound");
+    const startSound = document.getElementById("startSound");
+    missSound.volume = 0.5;
+    startSound.volume = 1;
+
+    const comboSounds = {
+      2: new Audio("deobeulkil.mp3"),
+      3: new Audio("teuripeulkil.mp3"),
+      4: new Audio("kweodeurakil.mp3"),
+      5: new Audio("pentakil.mp3"),
+      6: new Audio("micyeonalddwigoissseubnida.mp3")
+    };
+    Object.values(comboSounds).forEach(audio => audio.volume = 0.5);
+
+    let score = 0;
+    let comboCount = 0;
+    let gameInterval;
+    let timerInterval;
+    let movedToLevel2 = false;
+    const gameTime = 40;
+    const moleImgSrc = "https://opgg-com-image.akamaized.net/attach/images/20190619170044.778253.png";
+
+    function createMole() {
+      const mole = document.createElement("img");
+      mole.src = moleImgSrc;
+      mole.className = "mole";
+
+      const x = Math.random() * (game.clientWidth - 80);
+      const y = Math.random() * (game.clientHeight - 80);
+      mole.style.left = `${x}px`;
+      mole.style.top = `${y}px`;
+
+      mole.onclick = () => {
+        score++;
+        comboCount++;
+        scoreDisplay.textContent = `점수: ${score}`;
+        mole.remove();
+
+        if (comboCount >= 2 && comboCount <= 6) {
+          comboSounds[comboCount].currentTime = 0;
+          comboSounds[comboCount].play();
+        }
+
+        if (score >= 25 && !movedToLevel2) {
+          movedToLevel2 = true;
+          clearInterval(gameInterval);
+          clearInterval(timerInterval);
+          alert("🎉 2단계로 넘어갑니다!");
+          window.location.href = "http://127.0.0.1:5500/%EC%9C%A0%EB%AF%B8%EC%9E%A1%EA%B8%B02.html";
+        }
+      };
+
+      game.appendChild(mole);
+
+      setTimeout(() => {
+        if (game.contains(mole)) {
+          mole.remove();
+          comboCount = 0;
+          missSound.currentTime = 0;
+          missSound.play();
+
+          const missText = document.createElement("div");
+          missText.className = "miss";
+          missText.innerText = "-miss";
+          missText.style.left = `${x + 20}px`;
+          missText.style.top = `${y + 20}px`;
+          game.appendChild(missText);
+
+          setTimeout(() => {
+            missText.remove();
+          }, 1000);
+        }
+      }, 1000);
+    }
+
+    function startGame() {
+      startSound.currentTime = 0;
+      startSound.play();
+
+      score = 0;
+      comboCount = 0;
+      movedToLevel2 = false;
+      scoreDisplay.textContent = "점수: 0";
+      clearInterval(gameInterval);
+      clearInterval(timerInterval);
+      timerBar.style.width = "0%";
+
+      let elapsed = 0;
+      timerInterval = setInterval(() => {
+        elapsed++;
+        let percent = (elapsed / gameTime) * 100;
+        timerBar.style.width = percent + "%";
+
+        if (elapsed >= gameTime && !movedToLevel2) {
+          clearInterval(timerInterval);
+          clearInterval(gameInterval);
+          alert(`⏱️ 게임 종료! 당신의 점수는 ${score}점입니다.`);
+        }
+      }, 1200);
+
+      gameInterval = setInterval(() => {
+        createMole();
+      }, 1200);
+    }
+
+    function goBack() {
+      window.location.href = "http://127.0.0.1:5500/%EA%B2%8C%EC%9E%84%EA%B3%A0%EB%A5%B4%EA%B8%B0.html";
+    }
+  </script>
+</body>
+</html>

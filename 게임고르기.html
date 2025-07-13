@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>유미고르기</title>
+  <link rel="icon" href="https://opgg-static.akamaized.net/meta/images/lol/15.13.1/champion/Yuumi.png?image=c_crop,h_103,w_103,x_9,y_9/q_auto:good,f_webp,w_160,h_160&v=1513" type="image/png"/>
+  <style>
+    body {
+      margin: 0;
+      background: url("https://i.namu.wiki/i/XWM6WnLe-lXB80ET_ahQwbqrU8N6Pn-XZZvLPOBFN5dUkrNd-BwNvV-B4TJNrfOZoW0Qnf5CZlVj8fuN6sLkZ-0vGhHx8t_yXzkeHX4H9Gb0PCJ-pxkpQ9K6i4t9snPckddNQwQOb24IqWLHrCTRcg.webp");
+      background-size: cover;
+      background-position: center;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: #fefefe;
+    }
+
+    .box-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .box {
+      visibility: hidden;
+      opacity: 0;
+      background-color: rgba(0, 0, 0, 0.644);
+      color: #fff;
+      text-align: center;
+      padding: 10px;
+      border-radius: 10px;
+      max-width: 250px;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      position: absolute;
+      z-index: 1;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
+    .box-top {
+      bottom: 120%;
+    }
+
+    .box-bottom {
+      top: 120%;
+    }
+
+    .box-container:hover .box {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    #myBtn, #myBt {
+      margin-top: 2rem;
+      padding: 1rem 3rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      animation: gradientShift 8s ease infinite;
+    }
+
+    #myBtn {
+      background: linear-gradient(135deg, #ff8e53, #fe6b8b, #33c1ff, #6a63d9);
+      background-size: 300% 300%;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3), 0 0 25px rgba(254, 107, 139, 0.9);
+    }
+
+    #myBtn:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4), 0 0 35px rgba(254, 107, 139, 1);
+    }
+
+    #myBt {
+      background: linear-gradient(135deg, #aee138, #4cd7da, #3adf59, #c545ab);
+      background-size: 300% 300%;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3), 0 0 25px rgba(107, 227, 254, 0.9);
+    }
+
+    #myBt:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4), 0 0 35px rgb(122, 107, 254);
+    }
+
+    @keyframes gradientShift {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box-container">
+    <div class="box box-top">
+      제한시간 내에 유미를 25번 잡는 게임입니다!<br>
+      티모가 나온다면 클릭하지 마세요!!<br>
+      티모는 독버섯으로 점수를 1점씩 감소한답니다.
+    </div>
+    <button id="myBtn">유미 잡기 게임 바로가기</button>
+  </div>
+
+  <div class="box-container">
+    <button id="myBt">유미 퀴즈 바로가기</button>
+    <div class="box box-bottom">
+      유미의 기본 tmi와 스킨의 퀴즈가 나옵니다.<br>
+      유미에 대해 얼마나 알고 있는지 테스트를 해보세요!
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("myBtn").addEventListener("click", () => {
+      window.location.href = "http://127.0.0.1:5500/%EC%9C%A0%EB%AF%B8%EC%9E%A1%EA%B8%B0.html";
+    });
+    document.getElementById("myBt").addEventListener("click", () => {
+      window.location.href = "http://127.0.0.1:5500/%ED%80%B4%EC%A6%88%EC%B4%9D%ED%95%A9.html";
+    });
+  </script>
+</body>
+</html>
